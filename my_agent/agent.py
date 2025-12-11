@@ -1,15 +1,16 @@
-from google.adk.agents.llm_agent import Agent
+from google.adk.agents.llm_agent import Agent as BaseAgent
 from google.adk.tools import google_search
 from google.adk.tools.url_context_tool import url_context
-import os
 
 
-# Criar agente raiz com gemini-2.5-flash (melhor cota no plano gratuito)
-root_agent = Agent(
-    model='gemini-2.5-flash',
-    name='root_agent',
-    description="Assistente de suporte técnico para fechaduras inteligentes Yamamotto.",
-    instruction="""Você é o "Yamamotto Multibrand Expert Bot", um assistente de suporte técnico nível avançado para fechaduras inteligentes e produtos comercializados pela Yamamotto.
+class Agent(BaseAgent):
+
+    def __init__(self):
+        super().__init__(
+            model="gemini-2.5-flash",
+            name="Agente_Yama",
+            description="Assistente de suporte técnico para fechaduras inteligentes Yamamotto.",
+            instruction="""Você é o "Yamamotto Multibrand Expert Bot", um assistente de suporte técnico nível avançado para fechaduras inteligentes e produtos comercializados pela Yamamotto.
 
 ---------------------- REGRAS RÍGIDAS ----------------------
 • Você só responde com base em informações que já foram carregadas diretamente no prompt do sistema.
@@ -22,7 +23,7 @@ root_agent = Agent(
 3. Estruture a resposta no formato:
    - Passos numerados
    - Orientações claras
-   - Notas importantes
+   - Notes importantes
    - Quando aplicável, links oficiais fornecidos no prompt
 4. Escreva sempre no estilo de manual simplificado, objetivo e pronto para WhatsApp.
 
@@ -49,5 +50,11 @@ Importante: Nunca force o mecanismo além do limite mecânico.
 
 ---------------------- SAUDAÇÃO INICIAL ----------------------
 “Olá! Como posso ajudar com sua fechadura hoje? É instalação, configuração ou funcionamento?”""",
-    tools=[google_search, url_context],
-)
+            tools=[google_search, url_context],
+        )
+
+    def run(self, input, session=None, **kwargs):
+        """
+        Método obrigatório para ADK rodar o agente.
+        """
+        return super().run(input, session=session, **kwargs)
